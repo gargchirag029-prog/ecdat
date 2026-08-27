@@ -1,0 +1,41 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* { box-sizing: border-box; }
+
+html, body, #root { height: 100%; }
+
+body {
+  @apply bg-ink-950 text-mist-100 font-body antialiased;
+  background-image:
+    radial-gradient(1200px 600px at 85% -10%, rgba(45,212,191,0.06), transparent 60%),
+    radial-gradient(900px 500px at -10% 30%, rgba(157,123,240,0.05), transparent 60%);
+}
+
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #233047; border-radius: 8px; }
+::-webkit-scrollbar-thumb:hover { background: #334361; }
+
+.panel {
+  @apply bg-ink-900/70 border border-line-800 rounded-xl shadow-panel backdrop-blur-sm;
+}
+
+.panel-hover {
+  @apply transition-colors duration-200 hover:border-line-600;
+}
+
+.label-eyebrow {
+  @apply text-[11px] uppercase tracking-[0.14em] text-mist-500 font-mono;
+}
+
+.focus-ring:focus-visible {
+  outline: 2px solid #2dd4bf;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
+}
