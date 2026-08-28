@@ -62,3 +62,22 @@ def test_api_scan_flow_and_zip_security():
         archive.writestr("../escape.py", "RSA.generate(2048)")
     blocked = client.post("/api/scan/upload", files={"file": ("unsafe.zip", unsafe.getvalue(), "application/zip")})
     assert blocked.status_code == 400
+
+
+def test_upgrade_endpoints_and_dashboard_data():
+    client = TestClient(app)
+    response = client.post("/api/scans", files={"file": ("sample.zip", make_zip(), "application/zip")})
+    assert response.status_code == 201
+    scan_id = response.json()["scan_id"]
+    assert client.post(f"/api/scans/{scan_id}/start").status_code == 200
+    inventory = client.get(f"/api/inventory/{scan_id}?algorithm=RSA&risk_level=HIGH").json()
+    assert inventory["total"] >= 0
+    assert client.get(f"/api/dependencies/{scan_id}").status_code == 200
+    graph = client.get(f"/api/graph/{scan_id}")
+    assert graph.status_code == 200 and "nodes" in graph.json()
+    dashboard = client.get(f"/api/dashboard/{scan_id}")
+    assert dashboard.status_code == 200 and dashboard.json()["total_assets"] >= 0
+    migration = client.get(f"/api/migration/{scan_id}/plan")
+    assert migration.status_code == 200 and "overall_readiness" in migration.json()
+    assert client.get(f"/api/cbom/{scan_id}").status_code == 200
+    assert client.get(f"/api/reports/{scan_id}").status_code == 200

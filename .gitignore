@@ -12,6 +12,20 @@ dist
 dist-ssr
 *.local
 
+# Python runtime
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.venv/
+venv/
+.env
+.env.*
+!.env.example
+.pytest_cache/
+backend/.pytest_cache/
+backend/**/__pycache__/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
@@ -25,6 +39,21 @@ dist-ssr
 
 # ECDAT backend runtime files
 backend/ecdat.db
+backend/ecdat*.db
 backend/uploads/
-backend/**/__pycache__/
-backend/.pytest_cache/
+backend/uploads/**
+backend/**/uploads/
+*.sqlite3
+*.db
+
+# Temporary and generated output
+*.tmp
+*.bak
+*.zip
+*.tar
+*.tgz
+coverage/
+htmlcov/
+
+# OS
+Thumbs.db

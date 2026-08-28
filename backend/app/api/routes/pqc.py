@@ -19,4 +19,4 @@ def pqc(scan_id: str, db: Session = Depends(get_db)):
     candidates = [item for item in items if item.pqc_migration]
     vulnerable = sum(item.quantum_status == "VULNERABLE" for item in items)
     readiness = round((1 - vulnerable / len(items)) * 100) if items else 100
-    return {"readiness_score": readiness, "quantum_vulnerable": vulnerable, "migration_candidates": len(candidates), "top_priorities": [artifact_to_dict(item) for item in sorted(candidates, key=lambda item: item.risk_score, reverse=True)[:10]], "algorithm_breakdown": dict(Counter(item.algorithm for item in candidates))}
+    return {"readiness_score": readiness, "level": "NEEDS_ATTENTION" if readiness < 60 else "MONITOR" if readiness < 80 else "READY", "quantum_vulnerable": vulnerable, "migration_candidates": len(candidates), "top_priorities": [artifact_to_dict(item) for item in sorted(candidates, key=lambda item: item.risk_score, reverse=True)[:10]], "algorithm_breakdown": dict(Counter(item.algorithm for item in candidates))}

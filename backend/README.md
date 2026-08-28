@@ -4,7 +4,7 @@ ECDAT (Enterprise Cryptographic Discovery & Analysis Tool) is a FastAPI MVP that
 
 ## Architecture
 
-`POST /api/scan/upload` safely stores and extracts a ZIP. `POST /api/scan/{scan_id}/start` scans supported source/configuration files, normalizes line-level findings, enriches them with the risk and PQC engines, and persists them in SQLite. The CBOM generator and read-only APIs expose the same structured records to the React frontend or a future AI service.
+The backend follows a layered design: upload and scanner input are treated as untrusted content, then normalized into cryptographic artifacts, risk scores, PQC guidance, dependency summaries, CBOM exports, and migration planning. The current architecture is intentionally compact but modular, so it can evolve toward richer dependency and certificate models without rewriting the core API.
 
 - `app/services/scanner`: centralized regex rules, parsing heuristics, and bounded recursive scanning
 - `app/services/analysis`: transparent risk scoring and PQC recommendations
@@ -20,6 +20,7 @@ From `backend/` on Windows:
 python -m venv venv
 venv\Scripts\activate
 pip install -r requirements.txt
+copy .env.example .env
 uvicorn app.main:app --reload
 ```
 
@@ -37,7 +38,7 @@ curl.exe http://localhost:8000/api/pqc/scan_<id>
 curl.exe http://localhost:8000/api/reports/scan_<id>/cbom
 ```
 
-Inventory response fields include pagination metadata and normalized artifact fields. Detail records include a bounded source snippet, risk reason, PQC status, and recommendation. The React app can replace its mock service calls with `fetch('http://localhost:8000/...')`; CORS defaults to `http://localhost:5173` and is configurable with `ECDAT_ALLOWED_ORIGINS`.
+The API also exposes compatible aliases such as `/api/scans`, `/api/scans/{scan_id}/start`, `/api/dashboard/{scan_id}`, `/api/dependencies/{scan_id}`, `/api/graph/{scan_id}`, and `/api/migration/{scan_id}/plan`.
 
 ## Deterministic scoring
 
@@ -53,7 +54,7 @@ The sample project contains harmless API references only; it includes no real pr
 
 ## Configuration
 
-`ECDAT_DATABASE_URL`, `ECDAT_UPLOAD_DIR`, `ECDAT_ALLOWED_ORIGINS`, `ECDAT_MAX_UPLOAD_BYTES`, `ECDAT_MAX_FILE_BYTES`, and `ECDAT_MAX_EXTRACTED_BYTES` are optional environment variables.
+`ECDAT_DATABASE_URL`, `ECDAT_UPLOAD_DIR`, `ECDAT_ALLOWED_ORIGINS`, `ECDAT_MAX_UPLOAD_BYTES`, `ECDAT_MAX_FILE_BYTES`, and `ECDAT_MAX_EXTRACTED_BYTES` are optional environment variables. A template is provided in `.env.example`.
 
 ## Future work
 

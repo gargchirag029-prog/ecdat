@@ -8,7 +8,7 @@ from app.models.scan import Scan
 from app.services.cbom.generator import generate_cbom
 from app.services.reports.report_generator import generate_assessment
 
-router = APIRouter(prefix="/api/reports", tags=["reports"])
+router = APIRouter(prefix="/api", tags=["reports"])
 
 
 def get_data(scan_id: str, db: Session):
@@ -18,14 +18,24 @@ def get_data(scan_id: str, db: Session):
     return generate_cbom(scan_id, artifacts)
 
 
-@router.get("/{scan_id}/cbom")
+@router.get("/cbom/{scan_id}")
 def cbom(scan_id: str, db: Session = Depends(get_db)):
     return get_data(scan_id, db)
 
 
-@router.get("/{scan_id}/json")
+@router.get("/reports/{scan_id}/cbom")
+def cbom_legacy(scan_id: str, db: Session = Depends(get_db)):
+    return get_data(scan_id, db)
+
+
+@router.get("/reports/{scan_id}")
 def report(scan_id: str, db: Session = Depends(get_db)):
     if not db.get(Scan, scan_id):
         raise HTTPException(404, detail={"code": "scan_not_found", "message": "Scan not found"})
     artifacts = list(db.scalars(select(CryptoArtifact).where(CryptoArtifact.scan_id == scan_id)))
     return generate_assessment(scan_id, artifacts)
+
+
+@router.get("/reports/{scan_id}/json")
+def report_json(scan_id: str, db: Session = Depends(get_db)):
+    return report(scan_id, db)

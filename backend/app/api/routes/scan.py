@@ -16,6 +16,7 @@ from app.services.scanner.scanner import scan_project
 from app.utils.file_utils import store_upload
 
 router = APIRouter(prefix="/api/scan", tags=["scan"])
+modern_router = APIRouter(prefix="/api", tags=["scan"])
 
 
 def get_scan_or_404(scan_id: str, db: Session) -> Scan:
@@ -33,6 +34,11 @@ def upload_project(file: UploadFile = File(...), db: Session = Depends(get_db)):
     db.add(scan)
     db.commit()
     return {"scan_id": scan.id, "filename": scan.filename, "status": scan.status}
+
+
+@router.post("", response_model=UploadResponse, status_code=201)
+def upload_scan_alias(file: UploadFile = File(...), db: Session = Depends(get_db)):
+    return upload_project(file=file, db=db)
 
 
 @router.post("/{scan_id}/start", response_model=StartResponse)
@@ -64,3 +70,28 @@ def get_scan(scan_id: str, db: Session = Depends(get_db)):
     scan = get_scan_or_404(scan_id, db)
     counts = {level: sum(1 for item in scan.artifacts if item.risk == level) for level in ("CRITICAL", "HIGH", "MEDIUM", "LOW")}
     return {**scan.__dict__, "high_risk": counts["HIGH"], "critical": counts["CRITICAL"], "medium": counts["MEDIUM"], "low": counts["LOW"], "pqc_candidates": sum(1 for item in scan.artifacts if item.pqc_migration)}
+
+
+@modern_router.post("/scans", response_model=UploadResponse, status_code=201)
+def upload_scan_modern(file: UploadFile = File(...), db: Session = Depends(get_db)):
+    return upload_project(file=file, db=db)
+
+
+@modern_router.post("/scans/{scan_id}/start", response_model=StartResponse)
+def start_scan_modern(scan_id: str, db: Session = Depends(get_db)):
+    return start_scan(scan_id=scan_id, db=db)
+
+
+@modern_router.get("/scans/{scan_id}", response_model=ScanSummary)
+def get_scan_modern(scan_id: str, db: Session = Depends(get_db)):
+    return get_scan(scan_id=scan_id, db=db)
+
+
+@router.post("/scan_{scan_id}/start")
+def legacy_start_scan(scan_id: str, db: Session = Depends(get_db)):
+    return start_scan(scan_id=f"scan_{scan_id}", db=db)
+
+
+@router.get("/scan_{scan_id}")
+def legacy_scan(scan_id: str, db: Session = Depends(get_db)):
+    return get_scan(f"scan_{scan_id}", db=db)
