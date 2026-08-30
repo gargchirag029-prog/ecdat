@@ -5,10 +5,11 @@ import Layout from "../components/Layout";
 import UploadBox from "../components/UploadBox";
 import ScanProgress from "../components/ScanProgress";
 import Button from "../components/Button";
-import { runScanSimulation } from "../services/api";
+import { uploadScan, startScan } from "../services/api";
 
 const STAGES = [
-  "Discovering files",
+  "Uploading project",
+  "Extracting files",
   "Analyzing source code",
   "Detecting cryptographic APIs",
   "Building CBOM",
@@ -23,20 +24,13 @@ export default function ScanProject() {
   const [scanning, setScanning] = useState(false);
   const [stageIndex, setStageIndex] = useState(-1);
   const [result, setResult] = useState(null);
+  const [error, setError] = useState(null);
 
   const handleFile = (f) => {
     setFile(f);
     setUploadProgress(0);
     setResult(null);
-    const interval = setInterval(() => {
-      setUploadProgress((p) => {
-        if (p >= 100) {
-          clearInterval(interval);
-          return 100;
-        }
-        return p + 14;
-      });
-    }, 120);
+    setError(null);
   };
 
   const handleRemove = () => {
@@ -44,14 +38,42 @@ export default function ScanProject() {
     setUploadProgress(0);
     setResult(null);
     setStageIndex(-1);
+    setError(null);
   };
 
-  const startScan = async () => {
-    setScanning(true);
-    setStageIndex(0);
-    const res = await runScanSimulation((i) => setStageIndex(i));
-    setResult(res);
-    setScanning(false);
+  const performScan = async () => {
+    if (!file) return;
+    
+    try {
+      setScanning(true);
+      setError(null);
+      setStageIndex(0);
+      
+      // Upload file
+      setStageIndex(0);
+      const uploadResponse = await uploadScan(file);
+      const scanId = uploadResponse.scan_id;
+      setUploadProgress(100);
+      
+      // Start scanning
+      setStageIndex(1);
+      const scanResponse = await startScan(scanId);
+      setStageIndex(6);
+      
+      // Show results
+      setResult({
+        scanId,
+        filesScanned: scanResponse.files_scanned || 0,
+        artifactsFound: scanResponse.artifacts_found || 0,
+        highRiskFindings: 0, // Will be calculated from inventory
+        pqcCandidates: 0, // Will be calculated from inventory
+      });
+      setScanning(false);
+    } catch (err) {
+      setError(err.message || "Scan failed. Please try again.");
+      setScanning(false);
+      setStageIndex(-1);
+    }
   };
 
   return (
@@ -62,11 +84,17 @@ export default function ScanProject() {
       </div>
 
       <div className="max-w-2xl">
+        {error && (
+          <div className="mb-5 p-4 rounded-lg bg-signal-rose/10 border border-signal-rose/20">
+            <p className="text-sm text-signal-rose">{error}</p>
+          </div>
+        )}
+
         <UploadBox file={file} onFile={handleFile} onRemove={handleRemove} progress={uploadProgress} />
 
-        {file && uploadProgress === 100 && !scanning && !result && (
+        {file && uploadProgress === 0 && !scanning && !result && (
           <div className="mt-5 flex justify-end">
-            <Button onClick={startScan}>
+            <Button onClick={performScan}>
               <FileSearch size={16} /> Start Cryptographic Scan
             </Button>
           </div>

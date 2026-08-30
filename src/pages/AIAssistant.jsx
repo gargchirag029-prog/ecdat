@@ -2,13 +2,18 @@ import { useEffect, useRef, useState } from "react";
 import { Send, Bot, User, Sparkles } from "lucide-react";
 import Layout from "../components/Layout";
 import { askAssistant } from "../services/api";
-import { aiSuggestedQuestions } from "../data/mockData";
+
+const DEFAULT_QUESTIONS = [
+  "What are the most critical cryptographic risks?",
+  "How can I improve my PQC readiness?",
+  "Which algorithms need migration?",
+];
 
 export default function AIAssistant() {
   const [messages, setMessages] = useState([
     {
       role: "ai",
-      text: "Hi, I'm the ECDAT AI Assistant. Ask me anything about your organization's cryptographic inventory, risk findings, or PQC readiness.",
+      text: "Hi, I'm the CRYPT AI Assistant. Ask me anything about your organization's cryptographic inventory, risk findings, or PQC readiness. Upload a project first to analyze your cryptographic landscape.",
     },
   ]);
   const [input, setInput] = useState("");
@@ -33,7 +38,7 @@ export default function AIAssistant() {
   return (
     <Layout title="AI Assistant" subtitle="Ask questions about your organization's cryptographic inventory and risk.">
       <div className="mb-6">
-        <h2 className="font-display text-2xl font-semibold text-mist-100">ECDAT AI Assistant</h2>
+        <h2 className="font-display text-2xl font-semibold text-mist-100">CRYPT AI Assistant</h2>
         <p className="text-mist-500 text-sm mt-1">Ask questions about your organization's cryptographic inventory and risk.</p>
       </div>
 
@@ -75,7 +80,7 @@ export default function AIAssistant() {
 
         {messages.length < 3 && (
           <div className="px-5 pb-3 flex flex-wrap gap-2">
-            {aiSuggestedQuestions.map((q) => (
+            {DEFAULT_QUESTIONS.map((q) => (
               <button
                 key={q}
                 onClick={() => send(q)}

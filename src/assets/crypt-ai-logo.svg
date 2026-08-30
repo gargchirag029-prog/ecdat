@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Outer Shield -->
+  <defs>
+    <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#06b6d4;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2dd4bf;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="lockGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#06b6d4;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0891b2;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Shield outline -->
+  <path d="M 50 8 L 75 20 L 75 45 Q 75 65 50 75 Q 25 65 25 45 L 25 20 Z" 
+        fill="none" stroke="url(#shieldGrad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  
+  <!-- Lock circle background -->
+  <circle cx="50" cy="50" r="22" fill="#0f172a" opacity="0.6"/>
+  
+  <!-- Lock body -->
+  <rect x="42" y="42" width="16" height="18" rx="2" fill="none" stroke="url(#lockGrad)" stroke-width="2"/>
+  
+  <!-- Lock shackle -->
+  <path d="M 42 42 Q 42 32 50 32 Q 58 32 58 42" 
+        fill="none" stroke="url(#lockGrad)" stroke-width="2" stroke-linecap="round"/>
+  
+  <!-- Lock keyhole -->
+  <circle cx="50" cy="48" r="1.5" fill="url(#lockGrad)"/>
+  
+  <!-- Circuit pattern on right -->
+  <g stroke="#06b6d4" stroke-width="1.5" fill="none" opacity="0.7">
+    <rect x="68" y="18" width="3" height="3" fill="#06b6d4"/>
+    <line x1="68" y1="21" x2="68" y2="28"/>
+    <rect x="65" y="28" width="3" height="3" fill="#06b6d4"/>
+    
+    <rect x="72" y="35" width="2" height="2" fill="#06b6d4"/>
+    <line x1="73" y1="37" x2="73" y2="43"/>
+    <rect x="71" y="43" width="2" height="2" fill="#06b6d4"/>
+    
+    <rect x="74" y="52" width="2" height="2" fill="#06b6d4"/>
+    <line x1="75" y1="54" x2="75" y2="60"/>
+  </g>
+</svg>

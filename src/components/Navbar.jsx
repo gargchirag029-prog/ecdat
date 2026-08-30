@@ -29,7 +29,7 @@ export default function Navbar({ title, subtitle, onMenuClick }) {
           <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-signal-rose" />
         </button>
         <div className="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-500 to-signal-violet flex items-center justify-center text-[11px] font-semibold text-ink-950">
-          AR
+          AD
         </div>
       </div>
     </header>

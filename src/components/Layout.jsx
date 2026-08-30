@@ -34,7 +34,7 @@ export default function Layout({ title, subtitle, children }) {
                 <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-cyan-500 to-signal-violet flex items-center justify-center">
                   <ShieldCheck size={15} className="text-ink-950" />
                 </div>
-                <span className="font-display font-semibold text-mist-100 text-sm">ECDAT</span>
+                <span className="font-display font-semibold text-mist-100 text-sm">CRYPT AI</span>
               </div>
               <button onClick={() => setMobileOpen(false)} className="p-1.5 text-mist-400"><X size={18} /></button>
             </div>

@@ -8,11 +8,11 @@ import {
   Bot,
   FileText,
   Settings as SettingsIcon,
-  ShieldCheck,
   ChevronsLeft,
   ChevronsRight,
 } from "lucide-react";
 import { useState } from "react";
+import Logo from "../assets/crypt-ai-brand-logo.svg";
 
 const NAV_ITEMS = [
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard, end: true },
@@ -35,13 +35,11 @@ export default function Sidebar() {
       }`}
     >
       <div className="flex items-center gap-2.5 px-5 h-16 border-b border-line-800">
-        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-500 to-signal-violet flex items-center justify-center shrink-0">
-          <ShieldCheck size={17} className="text-ink-950" strokeWidth={2.5} />
-        </div>
+        <img src={Logo} alt="CRYPT AI" className="w-8 h-8 shrink-0" />
         {!collapsed && (
           <div className="leading-tight overflow-hidden">
-            <div className="font-display font-semibold text-mist-100 text-sm tracking-wide">ECDAT</div>
-            <div className="text-[10px] text-mist-500 font-mono truncate">Crypto Discovery</div>
+            <div className="font-display font-semibold text-mist-100 text-sm tracking-wide">CRYPT AI</div>
+            <div className="text-[10px] text-mist-500 font-mono truncate">Secure Today</div>
           </div>
         )}
       </div>
@@ -80,12 +78,12 @@ export default function Sidebar() {
         )}
         <div className={`flex items-center gap-2.5 px-2 ${collapsed ? "justify-center" : ""}`}>
           <div className="w-8 h-8 rounded-full bg-ink-700 border border-line-700 flex items-center justify-center text-xs font-medium text-mist-100 shrink-0">
-            AR
+            AD
           </div>
           {!collapsed && (
             <div className="leading-tight overflow-hidden">
-              <div className="text-sm text-mist-100 truncate">Aditi Rao</div>
-              <div className="text-[11px] text-mist-500 truncate">Security Engineer</div>
+              <div className="text-sm text-mist-100 truncate">Admin</div>
+              <div className="text-[11px] text-mist-500 truncate">Administrator</div>
             </div>
           )}
         </div>

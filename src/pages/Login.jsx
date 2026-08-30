@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
-import { ShieldCheck, ArrowRight, Lock, Mail } from "lucide-react";
+import { ArrowRight, Lock, Mail } from "lucide-react";
+import Logo from "../assets/crypt-ai-brand-logo.svg";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -14,18 +15,15 @@ export default function Login() {
       <div className="hidden lg:flex flex-col justify-between w-1/2 p-12 border-r border-line-800 bg-ink-900/40 relative overflow-hidden">
         <div className="absolute inset-0 bg-grid-faint bg-[size:32px_32px] opacity-40" />
         <div className="relative flex items-center gap-2.5">
-          <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-cyan-500 to-signal-violet flex items-center justify-center">
-            <ShieldCheck size={18} className="text-ink-950" strokeWidth={2.5} />
-          </div>
-          <span className="font-display font-semibold text-mist-100 text-lg tracking-wide">ECDAT</span>
+          <img src={Logo} alt="CRYPT AI" className="w-12 h-12" />
         </div>
 
         <div className="relative max-w-md">
           <h1 className="font-display text-4xl font-semibold text-mist-100 leading-tight">
-            Enterprise Cryptographic<br />Discovery &amp; Analysis
+            Secure Today<br />Quantum Ready Tomorrow
           </h1>
           <p className="text-mist-400 mt-5 leading-relaxed">
-            Discover cryptographic assets. Understand security risk. Prepare for the post-quantum era.
+            Enterprise-grade cryptographic discovery, inventory, and post-quantum readiness assessment.
           </p>
           <div className="flex items-center gap-2 mt-8">
             {["Discover", "Inventory", "Analyze", "Assess Risk", "PQC Ready"].map((s, i, arr) => (
@@ -37,16 +35,13 @@ export default function Login() {
           </div>
         </div>
 
-        <p className="relative text-xs text-mist-600 font-mono">© 2026 ECDAT Security. All rights reserved.</p>
+        <p className="relative text-xs text-mist-600 font-mono">© 2026 CRYPT AI. All rights reserved.</p>
       </div>
 
       <div className="flex-1 flex items-center justify-center p-8">
         <div className="w-full max-w-sm">
-          <div className="lg:hidden flex items-center gap-2.5 mb-10 justify-center">
-            <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-cyan-500 to-signal-violet flex items-center justify-center">
-              <ShieldCheck size={18} className="text-ink-950" strokeWidth={2.5} />
-            </div>
-            <span className="font-display font-semibold text-mist-100 text-lg">ECDAT</span>
+          <div className="lg:hidden flex items-center mb-10 justify-center">
+            <img src={Logo} alt="CRYPT AI" className="w-16 h-16" />
           </div>
 
           <h2 className="font-display text-2xl font-semibold text-mist-100 mb-1.5">Sign in</h2>
@@ -60,7 +55,7 @@ export default function Login() {
                 <input
                   type="email"
                   required
-                  defaultValue="aditi.rao@acme.com"
+                  defaultValue="admin@cryptai.local"
                   className="bg-transparent text-sm text-mist-100 outline-none w-full"
                 />
               </div>

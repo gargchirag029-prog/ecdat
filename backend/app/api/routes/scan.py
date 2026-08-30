@@ -69,7 +69,20 @@ def start_scan(scan_id: str, db: Session = Depends(get_db)):
 def get_scan(scan_id: str, db: Session = Depends(get_db)):
     scan = get_scan_or_404(scan_id, db)
     counts = {level: sum(1 for item in scan.artifacts if item.risk == level) for level in ("CRITICAL", "HIGH", "MEDIUM", "LOW")}
-    return {**scan.__dict__, "high_risk": counts["HIGH"], "critical": counts["CRITICAL"], "medium": counts["MEDIUM"], "low": counts["LOW"], "pqc_candidates": sum(1 for item in scan.artifacts if item.pqc_migration)}
+    return {
+        "scan_id": scan.id,
+        "filename": scan.filename,
+        "status": scan.status,
+        "created_at": scan.created_at,
+        "completed_at": scan.completed_at,
+        "files_scanned": scan.files_scanned,
+        "artifacts_found": scan.artifacts_found,
+        "high_risk": counts["HIGH"],
+        "critical": counts["CRITICAL"],
+        "medium": counts["MEDIUM"],
+        "low": counts["LOW"],
+        "pqc_candidates": sum(1 for item in scan.artifacts if item.pqc_migration),
+    }
 
 
 @modern_router.post("/scans", response_model=UploadResponse, status_code=201)

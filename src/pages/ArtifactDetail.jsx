@@ -130,7 +130,7 @@ export default function ArtifactDetail() {
           </div>
 
           <Button className="w-full" onClick={() => navigate("/ai")}>
-            <Bot size={16} /> Ask ECDAT AI
+            <Bot size={16} /> Ask CRYPT AI
           </Button>
         </div>
       </div>

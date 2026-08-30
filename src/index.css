@@ -14,14 +14,49 @@ body {
     radial-gradient(900px 500px at -10% 30%, rgba(157,123,240,0.05), transparent 60%);
 }
 
+body.theme-light {
+  @apply bg-slate-50 text-slate-900;
+  background-image:
+    radial-gradient(1200px 600px at 85% -10%, rgba(14,165,233,0.08), transparent 60%),
+    radial-gradient(900px 500px at -10% 30%, rgba(168,85,247,0.06), transparent 60%);
+}
+
 ::-webkit-scrollbar { width: 8px; height: 8px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: #233047; border-radius: 8px; }
 ::-webkit-scrollbar-thumb:hover { background: #334361; }
 
+body.theme-light ::-webkit-scrollbar-thumb { background: #cbd5e1; }
+body.theme-light ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
 .panel {
   @apply bg-ink-900/70 border border-line-800 rounded-xl shadow-panel backdrop-blur-sm;
 }
+
+body.theme-light .panel {
+  background: rgba(255, 255, 255, 0.86) !important;
+  border-color: #e2e8f0 !important;
+  box-shadow: 0 10px 30px -12px rgba(15, 23, 42, 0.12) !important;
+}
+
+body.theme-light .text-mist-100 { color: #0f172a !important; }
+body.theme-light .text-mist-300 { color: #475569 !important; }
+body.theme-light .text-mist-500 { color: #64748b !important; }
+body.theme-light .text-mist-700 { color: #334155 !important; }
+
+body.theme-light .bg-ink-950 { background-color: #f8fafc !important; }
+body.theme-light .bg-ink-900 { background-color: #ffffff !important; }
+body.theme-light .bg-ink-900\/70 { background-color: rgba(255, 255, 255, 0.86) !important; }
+body.theme-light .bg-ink-800 { background-color: #f1f5f9 !important; }
+body.theme-light .bg-ink-700 { background-color: #e2e8f0 !important; }
+body.theme-light .bg-ink-600 { background-color: #e2e8f0 !important; }
+
+body.theme-light .border-line-800 { border-color: #e2e8f0 !important; }
+body.theme-light .border-line-700 { border-color: #cbd5e1 !important; }
+body.theme-light .border-line-600 { border-color: #cbd5e1 !important; }
+
+body.theme-light .bg-cyan-500\/10 { background-color: rgba(14, 165, 233, 0.08) !important; }
+body.theme-light .text-cyan-400 { color: #0891b2 !important; }
 
 .panel-hover {
   @apply transition-colors duration-200 hover:border-line-600;

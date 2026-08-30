@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import { Upload } from "lucide-react";
 import Layout from "../components/Layout";
 import RiskBadge from "../components/RiskBadge";
-import { getRiskAnalysis } from "../services/api";
+import { getRiskAnalysis, getCurrentScanId } from "../services/api";
 
 const IMPACT_LEVELS = [5, 4, 3, 2, 1];
 const LIKELIHOOD_LEVELS = [1, 2, 3, 4, 5];
@@ -18,15 +19,33 @@ function cellColor(impact, likelihood) {
 export default function RiskAnalysis() {
   const navigate = useNavigate();
   const [data, setData] = useState(null);
+  const scanId = getCurrentScanId();
 
   useEffect(() => {
-    getRiskAnalysis().then(setData);
-  }, []);
+    if (scanId) {
+      getRiskAnalysis(scanId).then(setData);
+    }
+  }, [scanId]);
 
   if (!data) {
     return (
       <Layout title="Risk Analysis">
-        <div className="panel h-96 animate-pulse" />
+        <div className="flex flex-col items-center justify-center py-24 px-4">
+          <div className="text-center">
+            <Upload size={48} className="mx-auto mb-4 text-mist-400" />
+            <h2 className="font-display text-2xl font-semibold text-mist-100 mb-2">No Risk Data Available</h2>
+            <p className="text-mist-500 mb-6 max-w-md">
+              Upload a project to analyze cryptographic risks.
+            </p>
+            <Link
+              to="/scan"
+              className="inline-flex items-center gap-2 px-6 py-2.5 bg-cyan-500 hover:bg-cyan-600 text-ink-950 font-semibold rounded-lg transition-colors"
+            >
+              <Upload size={16} />
+              Scan Project
+            </Link>
+          </div>
+        </div>
       </Layout>
     );
   }
