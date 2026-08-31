@@ -1,8 +1,37 @@
+def _coerce_artifact(artifact):
+    if artifact is None:
+        return {"algorithm": "UNKNOWN", "variant": None, "key_size": None, "confidence": "MEDIUM"}
+    if isinstance(artifact, dict):
+        return {
+            "algorithm": artifact.get("algorithm", "UNKNOWN"),
+            "variant": artifact.get("variant"),
+            "key_size": artifact.get("key_size"),
+            "confidence": artifact.get("confidence", "MEDIUM"),
+        }
+    return {
+        "algorithm": getattr(artifact, "algorithm", "UNKNOWN"),
+        "variant": getattr(artifact, "variant", None),
+        "key_size": getattr(artifact, "key_size", None),
+        "confidence": getattr(artifact, "confidence", "MEDIUM"),
+    }
+
+
 def calculate_risk(artifact) -> dict:
-    algorithm = getattr(artifact, "algorithm", "").upper()
-    variant = getattr(artifact, "variant", None)
-    key_size = getattr(artifact, "key_size", None)
-    confidence = getattr(artifact, "confidence", "MEDIUM")
+    item = _coerce_artifact(artifact)
+    algorithm = str(item["algorithm"]).upper()
+    variant = item["variant"]
+    key_size = item["key_size"]
+    confidence = str(item.get("confidence", "MEDIUM")).upper()
+    if algorithm.startswith("AES-"):
+        algorithm = "AES"
+        if key_size is None and variant and "256" in variant:
+            key_size = 256
+        elif key_size is None and variant and "128" in variant:
+            key_size = 128
+    elif algorithm.startswith("SHA-"):
+        algorithm = "SHA"
+    elif algorithm.startswith("RSA-"):
+        algorithm = "RSA"
     score = 20
     factors = []
     reason = "Review cryptographic usage in its protocol and asset context."

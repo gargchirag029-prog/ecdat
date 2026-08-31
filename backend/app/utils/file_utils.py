@@ -7,8 +7,14 @@ from fastapi import HTTPException, UploadFile
 
 from app.core.config import MAX_EXTRACTED_BYTES, MAX_UPLOAD_BYTES, UPLOAD_DIR
 
-SUPPORTED_EXTENSIONS = {".py", ".js", ".jsx", ".ts", ".tsx", ".java", ".c", ".h", ".cpp", ".hpp", ".go", ".php", ".rb", ".yaml", ".yml", ".json", ".xml", ".pem", ".crt", ".cer", ".conf", ".cfg", ".ini", ".env.example"}
+SUPPORTED_EXTENSIONS = {".py", ".js", ".jsx", ".ts", ".tsx", ".java", ".c", ".h", ".cpp", ".hpp", ".go", ".rs", ".cs", ".php", ".rb", ".json", ".yaml", ".yml", ".xml", ".toml", ".txt", ".text", ".md", ".pem", ".crt", ".cer", ".conf", ".config", ".cfg", ".ini", ".env", ".env.example"}
 IGNORED_PARTS = {".git", "node_modules", "__pycache__", "build", "dist", ".venv", "venv"}
+BINARY_SUFFIXES = {".exe", ".dll", ".so", ".bin", ".dylib", ".o", ".a", ".class", ".jar", ".pyc", ".pyo"}
+TEXT_LIKE_NO_SUFFIX = {
+    ".env", ".env.local", ".env.development", ".env.production", ".env.test",
+    "dockerfile", "docker-compose", "compose", "config", "settings", "secrets", "credentials",
+    "appsettings", "web.config", "nginx.conf", "kubernetes", "manifest"
+}
 
 
 def safe_filename(name: str) -> str:
@@ -17,7 +23,14 @@ def safe_filename(name: str) -> str:
 
 
 def is_supported(path: Path) -> bool:
-    return path.suffix.lower() in SUPPORTED_EXTENSIONS
+    lower_name = path.name.lower()
+    if lower_name.endswith(tuple(BINARY_SUFFIXES)):
+        return False
+    if path.suffix.lower() in SUPPORTED_EXTENSIONS:
+        return True
+    if not path.suffix:
+        return lower_name.startswith(".env") or lower_name in TEXT_LIKE_NO_SUFFIX or lower_name.startswith("config") or lower_name.startswith("settings") or lower_name.startswith("secret")
+    return False
 
 
 def safe_extract(zip_path: Path, destination: Path) -> None:
