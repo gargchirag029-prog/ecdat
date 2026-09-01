@@ -19,25 +19,45 @@ def _coerce_artifact(artifact):
 def calculate_risk(artifact) -> dict:
     item = _coerce_artifact(artifact)
     algorithm = str(item["algorithm"]).upper()
-    variant = item["variant"]
+    variant = str(item["variant"] or "").upper()
     key_size = item["key_size"]
     confidence = str(item.get("confidence", "MEDIUM")).upper()
-    if algorithm.startswith("AES-"):
+
+    if algorithm in {"AES-GCM", "AES_256_GCM", "AES256GCM", "A256GCM"}:
+        algorithm = "AES-GCM"
+        key_size = key_size or 256
+    elif algorithm in {"AES-256-CBC", "AES_256_CBC", "AES256CBC", "A256CBC"}:
+        algorithm = "AES-256-CBC"
+        key_size = key_size or 256
+    elif algorithm in {"3DES", "TDES", "TRIPLE-DES", "TRIPLE_DES"}:
+        algorithm = "3DES"
+        key_size = key_size or 112
+    elif algorithm.startswith("AES-"):
         algorithm = "AES"
-        if key_size is None and variant and "256" in variant:
+        if key_size is None and "256" in variant:
             key_size = 256
-        elif key_size is None and variant and "128" in variant:
+        elif key_size is None and "128" in variant:
             key_size = 128
     elif algorithm.startswith("SHA-"):
         algorithm = "SHA"
     elif algorithm.startswith("RSA-"):
         algorithm = "RSA"
+
     score = 20
     factors = []
     reason = "Review cryptographic usage in its protocol and asset context."
     if algorithm in {"RSA", "ECDSA", "ECDH", "ECC"}:
         score, reason = 85, "Public-key cryptographic mechanism requiring post-quantum migration planning."
         factors.append("Public-key algorithm is quantum-vulnerable")
+    elif algorithm == "3DES":
+        score, reason = 90, "3DES is deprecated and should be migrated immediately to AES-GCM or a modern authenticated encryption mode."
+        factors.append("Algorithm is legacy/deprecated")
+    elif algorithm == "AES-256-CBC":
+        score, reason = 35, "AES-256-CBC is still usable but is a legacy mode; prefer authenticated encryption such as AES-GCM."
+        factors.append("Legacy mode with no authentication")
+    elif algorithm == "AES-GCM":
+        score, reason = 10, "AES-GCM is the preferred modern authenticated encryption mode with strong protection and integrity."
+        factors.append("Modern authenticated encryption")
     elif algorithm == "SHA" and variant == "SHA-1":
         score, reason = 90, "SHA-1 is a legacy hash with high collision risk."
         factors.append("Legacy hash function")

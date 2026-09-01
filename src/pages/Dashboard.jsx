@@ -7,6 +7,7 @@ import AlgorithmChart from "../components/AlgorithmChart";
 import RiskChart from "../components/RiskChart";
 import RiskBadge from "../components/RiskBadge";
 import PriorityBadge from "../components/PriorityBadge";
+import EncryptionMethodSelector from "../components/EncryptionMethodSelector";
 import {
   getDashboardStats,
   getAlgorithmDistribution,
@@ -106,6 +107,10 @@ export default function Dashboard() {
             <StatCard icon={ShieldAlert} label="High Risk" value={stats.highRisk} accent="rose" />
             <StatCard icon={Atom} label="PQC Candidates" value={stats.pqcCandidates} accent="amber" />
             <StatCard icon={Gauge} label="PQC Readiness" value={stats.pqcReadiness} suffix="%" accent="cyan" />
+          </div>
+
+          <div className="mb-6">
+            <EncryptionMethodSelector />
           </div>
 
           <div className="grid lg:grid-cols-2 gap-4 mb-6">

@@ -32,7 +32,8 @@ async function fetchAPI(endpoint, options = {}) {
     
     if (!response.ok) {
       const error = await response.json().catch(() => ({}));
-      throw new Error(error.detail?.message || `API Error: ${response.status}`);
+      const message = error.error || error.detail?.message || error.detail || `API Error: ${response.status}`;
+      throw new Error(message);
     }
     
     return await response.json();
@@ -71,6 +72,14 @@ export async function startScan(scanId) {
 // Get scan status
 export async function getScanStatus(scanId) {
   return fetchAPI(`/api/scan/${scanId}`);
+}
+
+// Analyze a selected encryption method
+export async function analyzeEncryptionMethod(algorithm) {
+  return fetchAPI("/api/encryption/analyze", {
+    method: "POST",
+    body: JSON.stringify({ algorithm }),
+  });
 }
 
 // Get dashboard data
